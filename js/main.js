@@ -154,6 +154,13 @@ var updatePlayer = function updatePlayer(player) {
    $(player).css({ rotate: rotation, top: position });
 };
 
+var intersectRect = function intersectRect(r1, r2) {
+  return !(r2.left > r1.right ||
+           r2.right < r1.left ||
+           r2.top > r1.bottom ||
+           r2.bottom < r1.top);
+};
+
 function gameloop() {
   var player = $("#player");
 
@@ -188,8 +195,8 @@ function gameloop() {
 
   // did we hit the ground?
   if (box.bottom >= $("#land").offset().top) {
-    // playerDead();
-    // return;
+    playerDead();
+    return;
   }
 
   // have they tried to escape through the ceiling? :o
@@ -199,48 +206,43 @@ function gameloop() {
   }
 
   // we can't go any further without a pipe
-  if (!pipes[0]) {
+  if (!coins[0]) {
     return;
   }
 
   // determine the bounding box of the next pipes inner area
-  var nextpipe = coins[0];
-  var nextpipeupper = nextpipe.children(".pipe_upper");
+  var nextcoin = coins[0];
 
-  var pipetop = nextpipeupper.offset().top + nextpipeupper.height();
-  // for some reason it starts at the inner pipes offset, not the outer pipes.
-  var pipeleft = nextpipeupper.offset().left - 2;
-  var piperight = pipeleft + pipewidth;
-  var pipebottom = pipetop + pipeheight;
+  var coinWidth = nextcoin.width();
+  var coinHeight = nextcoin.height();
+  var coinTop = nextcoin.offset().top;
+  var coinLeft = nextcoin.offset().left;
+  var coinRight = coinLeft + coinWidth;
+  var coinBottom = coinLeft + coinHeight;
 
   if (debugmode) {
     boundingbox = $("#pipebox");
-    boundingbox.css('left', pipeleft);
-    boundingbox.css('top', pipetop);
-    boundingbox.css('height', pipeheight);
-    boundingbox.css('width', pipewidth);
+    boundingbox.css('left', coinLeft);
+    boundingbox.css('top', coinTop);
+    boundingbox.css('height', coinHeight);
+    boundingbox.css('width', coinWidth);
   }
 
-  // have we gotten inside the pipe yet?
-  if (boxright > pipeleft) {
-    // we're within the pipe, have we passed between upper and lower pipes?
-    if (boxtop > pipetop && boxbottom < pipebottom) {
-      // yeah! we're within bounds
-    } else {
-      // no! we touched the pipe
-      playerDead();
-      return;
-    }
-  }
+  var coinBB = nextcoin[0].getBoundingClientRect();
 
+  if (intersectRect(box, coinBB)) {
+    console.log('GRABBED A COIN!');
 
-  // have we passed the imminent danger?
-  if (boxleft > piperight) {
-    // yes, remove it
-    pipes.splice(0, 1);
+    nextcoin.hide();
 
     // and score a point
     playerScore();
+  }
+
+  // have we passed the imminent danger?
+  if (boxleft > coinRight) {
+    // yes, remove it
+    coins.splice(0, 1);
   }
 }
 
@@ -476,7 +478,7 @@ var updateCoins = function updateCoins() {
    }).remove();
 
    var topheight = Math.floor(Math.random() * flyArea);
-   var newCoin = $('<div class="coin-wrapper" style="top: ' + topheight + 'px;"><div class="coin animated"></div></div>');
+   var newCoin = $('<div class="coin-wrapper animated" style="top: ' + topheight + 'px;"><div class="coin"></div></div>');
    $("#flyarea").append(newCoin);
    coins.push(newCoin);
 };
