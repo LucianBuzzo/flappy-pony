@@ -259,13 +259,6 @@ $(document).keydown(function(e) {
   }
 });
 
-// Handle mouse down OR touch start
-if ("ontouchstart" in window) {
-  $(document).on("touchstart", screenClick);
-} else {
-  $(document).on("mousedown", screenClick);
-}
-
 var screenClick = function screenClick() {
   if (currentstate === states.GameScreen) {
     playerJump();
@@ -273,6 +266,13 @@ var screenClick = function screenClick() {
     startGame();
   }
 };
+
+// Handle mouse down OR touch start
+if ("ontouchstart" in window) {
+  $(document).on("touchstart", screenClick);
+} else {
+  $(document).on("mousedown", screenClick);
+}
 
 var playerJump = function playerJump() {
   velocity = jump;
