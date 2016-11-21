@@ -448,11 +448,19 @@ Screen - Game
    color: #fff;
 }
 
-.coin {
-   width: 20px;
-   height: 20px;
-   background-image: url('../assets/coin-sprites.png');
+.coin-wrapper {
+  position: absolute;
+  left: -100px;
+  z-index: 10;
+  -webkit-animation: animPipe 7500ms linear;
+  animation: animPipe 7500ms linear;
+}
 
-   -webkit-animation: animCoin 750ms steps(1) infinite;
-   animation: animCoin 750ms steps(1) infinite;
+.coin {
+  width: 20px;
+  height: 20px;
+  background-image: url('../assets/coin-sprites.png');
+
+  -webkit-animation: animCoin 750ms steps(1) infinite;
+  animation: animCoin 750ms steps(1) infinite;
 }

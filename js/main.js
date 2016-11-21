@@ -38,6 +38,7 @@ var highscore = 0;
 var pipeheight = 90;
 var pipewidth = 52;
 var pipes = [];
+var coins = [];
 
 var replayclickable = false;
 
@@ -139,7 +140,7 @@ var startGame = function startGame() {
   // 60 times a second
   var updaterate = 1000.0 / 60.0;
   loopGameloop = setInterval(gameloop, updaterate);
-  loopPipeloop = setInterval(updatePipes, 1400);
+  loopPipeloop = setInterval(updateCoins, 1400);
 
   // jump from the start!
   playerJump();
@@ -187,8 +188,8 @@ function gameloop() {
 
   // did we hit the ground?
   if (box.bottom >= $("#land").offset().top) {
-    playerDead();
-    return;
+    // playerDead();
+    // return;
   }
 
   // have they tried to escape through the ceiling? :o
@@ -203,7 +204,7 @@ function gameloop() {
   }
 
   // determine the bounding box of the next pipes inner area
-  var nextpipe = pipes[0];
+  var nextpipe = coins[0];
   var nextpipeupper = nextpipe.children(".pipe_upper");
 
   var pipetop = nextpipeupper.offset().top + nextpipeupper.height();
@@ -466,6 +467,18 @@ var updatePipes = function updatePipes() {
    var newpipe = $('<div class="pipe animated"><div class="pipe_upper" style="height: ' + topheight + 'px;"></div><div class="pipe_lower" style="height: ' + bottomheight + 'px;"></div></div>');
    $("#flyarea").append(newpipe);
    pipes.push(newpipe);
+};
+
+var updateCoins = function updateCoins() {
+   // Do any pipes need removal?
+   $('.coin').filter(function() {
+     return $(this).position().left <= -100;
+   }).remove();
+
+   var topheight = Math.floor(Math.random() * flyArea);
+   var newCoin = $('<div class="coin-wrapper" style="top: ' + topheight + 'px;"><div class="coin animated"></div></div>');
+   $("#flyarea").append(newCoin);
+   coins.push(newCoin);
 };
 
 var isIncompatible = {
