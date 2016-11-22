@@ -141,6 +141,7 @@ var intersectRect = function intersectRect(r1, r2) {
 };
 
 var newPlayer = new Player();
+var newCoin = new Coin(120);
 
 function gameloop() {
   // update the player speed/position
@@ -149,7 +150,10 @@ function gameloop() {
 
   context2d.clearRect(0, 0, canvas.width, canvas.height);
   newPlayer.update(velocity, position);
-  newPlayer.render(context2d, 10, 10);
+  newPlayer.render(context2d);
+
+  newCoin.update();
+  newCoin.render(context2d);
 
   var player = $("#player");
 

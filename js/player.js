@@ -27,9 +27,7 @@ Player.prototype.render = function render(ctx) {
   // the alternative is to untranslate & unrotate after drawing
   ctx.save();
 
-  // move to the center of the canvas
-  // ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
-
+  // move to the center of the image
   ctx.translate(60 + this.width / 2, this.position + this.height / 2);
 
   // rotate the canvas to the specified degrees

@@ -36,7 +36,8 @@
   "globals": {
     "$": true,
     "buzz": true,
-    "Player": true
+    "Player": true,
+    "Coin": true
   },
 
   "plugins": [
