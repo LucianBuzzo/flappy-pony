@@ -464,3 +464,9 @@ Screen - Game
   -webkit-animation: animCoin 750ms steps(1) infinite;
   animation: animCoin 750ms steps(1) infinite;
 }
+
+.game-wrapper,
+#gamecontainer {
+  width: 50%;
+  float: left;
+}

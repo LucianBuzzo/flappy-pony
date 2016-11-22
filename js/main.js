@@ -1,20 +1,5 @@
-/*
-   Copyright 2014 Nebez Briefkani
-   floppybird - main.js
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http:// www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
-
+var canvas = document.querySelector('canvas');
+var context2d = canvas.getContext('2d');
 var debugmode = false;
 
 var states = Object.freeze({
@@ -35,9 +20,6 @@ var flyArea = $("#flyarea").height();
 var score = 0;
 var highscore = 0;
 
-var pipeheight = 90;
-var pipewidth = 52;
-var pipes = [];
 var coins = [];
 
 var replayclickable = false;
@@ -53,14 +35,11 @@ buzz.all().setVolume(volume);
 
 //  loops
 var loopGameloop;
-var loopPipeloop;
+var loopCoinLoop;
 
 $(document).ready(function() {
   if (window.location.search === "?debug") {
     debugmode = true;
-  }
-  if (window.location.search === "?easy") {
-    pipeheight = 200;
   }
 
   //  get the highscore
@@ -108,9 +87,9 @@ var showSplash = function showSplash() {
   soundSwoosh.stop();
   soundSwoosh.play();
 
-  //  clear out all the pipes if there are any
-  $(".pipe").remove();
-  pipes = [];
+  //  clear out all the coins if there are any
+  $(".coin-wrapper").remove();
+  coins = [];
 
   //  make everything animated again
   $(".animated").css('animation-play-state', 'running');
@@ -140,7 +119,7 @@ var startGame = function startGame() {
   // 60 times a second
   var updaterate = 1000.0 / 60.0;
   loopGameloop = setInterval(gameloop, updaterate);
-  loopPipeloop = setInterval(updateCoins, 1400);
+  loopCoinLoop = setInterval(updateCoins, 1400);
 
   // jump from the start!
   playerJump();
@@ -161,12 +140,19 @@ var intersectRect = function intersectRect(r1, r2) {
            r2.bottom < r1.top);
 };
 
-function gameloop() {
-  var player = $("#player");
+var newPlayer = new Player();
 
+function gameloop() {
   // update the player speed/position
   velocity += gravity;
   position += velocity;
+
+  context2d.clearRect(0, 0, canvas.width, canvas.height);
+  newPlayer.update(velocity, position);
+  newPlayer.render(context2d, 10, 10);
+
+  var player = $("#player");
+
 
   // update the player
   updatePlayer(player);
@@ -180,8 +166,6 @@ function gameloop() {
   var boxheight = (origheight + box.height) / 2;
   var boxleft = (box.width - boxwidth) / 2 + box.left;
   var boxtop = (box.height - boxheight) / 2 + box.top;
-  var boxright = boxleft + boxwidth;
-  var boxbottom = boxtop + boxheight;
   var boundingbox;
 
   // if we're in debug mode, draw the bounding box
@@ -218,7 +202,6 @@ function gameloop() {
   var coinTop = nextcoin.offset().top;
   var coinLeft = nextcoin.offset().left;
   var coinRight = coinLeft + coinWidth;
-  var coinBottom = coinLeft + coinHeight;
 
   if (debugmode) {
     boundingbox = $("#pipebox");
@@ -361,9 +344,9 @@ var playerDead = function playerDead() {
 
   // destroy our gameloops
   clearInterval(loopGameloop);
-  clearInterval(loopPipeloop);
+  clearInterval(loopCoinLoop);
   loopGameloop = null;
-  loopPipeloop = null;
+  loopCoinLoop = null;
 
   // mobile browsers don't support buzz bindOnce event
   if (isIncompatible.any()) {
@@ -453,24 +436,6 @@ var playerScore = function playerScore() {
    setBigScore();
 };
 
-var updatePipes = function updatePipes() {
-   // Do any pipes need removal?
-   $(".pipe").filter(function() {
-     return $(this).position().left <= -100;
-   }).remove();
-
-   // add a new pipe (top height + bottom height  + pipeheight == flyArea) and put it in our tracker
-   var padding = 80;
-   // double padding (for top and bottom)
-   var constraint = flyArea - pipeheight - padding * 2;
-   // add lower padding
-   var topheight = Math.floor(Math.random() * constraint + padding);
-   var bottomheight = flyArea - pipeheight - topheight;
-   var newpipe = $('<div class="pipe animated"><div class="pipe_upper" style="height: ' + topheight + 'px;"></div><div class="pipe_lower" style="height: ' + bottomheight + 'px;"></div></div>');
-   $("#flyarea").append(newpipe);
-   pipes.push(newpipe);
-};
-
 var updateCoins = function updateCoins() {
    // Do any pipes need removal?
    $('.coin').filter(function() {
@@ -506,3 +471,4 @@ var isIncompatible = {
     return isIncompatible.Android() || isIncompatible.BlackBerry() || isIncompatible.iOS() || isIncompatible.Opera() || isIncompatible.Safari() || isIncompatible.Windows();
   }
 };
+
