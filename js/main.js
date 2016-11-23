@@ -437,7 +437,7 @@ var playerScore = function playerScore() {
 };
 
 var updateCoins = function updateCoins() {
-  var topheight = Math.floor(Math.random() * flyArea);
+  var topheight = Math.floor(Math.random() * flyArea - 40) + 20;
   coins = coins.filter(c => c.dX > -100);
   coins.push(new Coin(topheight));
 };
