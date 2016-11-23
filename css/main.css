@@ -465,13 +465,8 @@ Screen - Game
   animation: animCoin 750ms steps(1) infinite;
 }
 
-/*
 .game-wrapper,
 #gamecontainer {
   width: 50%;
   float: left;
-}
-*/
-.game-wrapper {
-  display: none;
 }

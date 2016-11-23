@@ -141,7 +141,6 @@ var intersectRect = function intersectRect(r1, r2) {
 };
 
 var newPlayer = new Player();
-var newCoin = new Coin(120);
 
 function gameloop() {
   // update the player speed/position
@@ -152,24 +151,18 @@ function gameloop() {
   newPlayer.update(velocity, position);
   newPlayer.render(context2d);
 
-  newCoin.update();
-  newCoin.render(context2d);
+  coins.forEach(coin => {
+    coin.update();
+    coin.render(context2d);
+  });
 
-  var player = $("#player");
-
-
-  // update the player
-  updatePlayer(player);
-
-  // create the bounding box
-  var box = document.getElementById('player').getBoundingClientRect();
-  var origwidth = 34.0;
-  var origheight = 24.0;
+  var origwidth = newPlayer.width;
+  var origheight = newPlayer.height;
 
   var boxwidth = origwidth - Math.sin(Math.abs(rotation) / 90 * 8);
-  var boxheight = (origheight + box.height) / 2;
-  var boxleft = (box.width - boxwidth) / 2 + box.left;
-  var boxtop = (box.height - boxheight) / 2 + box.top;
+  var boxheight = origheight;
+  var boxleft = (newPlayer.width - boxwidth) / 2 + 60;
+  var boxtop = (newPlayer.height - boxheight) / 2 + newPlayer.position;
   var boundingbox;
 
   // if we're in debug mode, draw the bounding box
@@ -182,14 +175,14 @@ function gameloop() {
   }
 
   // did we hit the ground?
-  if (box.bottom >= $("#land").offset().top) {
+  if (newPlayer.position + newPlayer.height >= flyArea) {
     playerDead();
     return;
   }
 
   // have they tried to escape through the ceiling? :o
   var ceiling = $("#ceiling");
-  if (boxtop <= ceiling.offset().top + ceiling.height()) {
+  if (boxtop <= 0) {
     position = 0;
   }
 
@@ -201,10 +194,10 @@ function gameloop() {
   // determine the bounding box of the next pipes inner area
   var nextcoin = coins[0];
 
-  var coinWidth = nextcoin.width();
-  var coinHeight = nextcoin.height();
-  var coinTop = nextcoin.offset().top;
-  var coinLeft = nextcoin.offset().left;
+  var coinWidth = nextcoin.width;
+  var coinHeight = nextcoin.height;
+  var coinTop = nextcoin.dY;
+  var coinLeft = nextcoin.dX;
   var coinRight = coinLeft + coinWidth;
 
   if (debugmode) {
@@ -215,15 +208,18 @@ function gameloop() {
     boundingbox.css('width', coinWidth);
   }
 
-  var coinBB = nextcoin[0].getBoundingClientRect();
+  var coinBB = nextcoin.getBoundingBox();
+  var playerBB = newPlayer.getBoundingBox();
 
-  if (intersectRect(box, coinBB)) {
+  if (intersectRect(playerBB, coinBB)) {
     console.log('GRABBED A COIN!');
 
-    nextcoin.hide();
+    coins.splice(0, 1);
 
     // and score a point
     playerScore();
+
+    return;
   }
 
   // have we passed the imminent danger?
@@ -441,15 +437,9 @@ var playerScore = function playerScore() {
 };
 
 var updateCoins = function updateCoins() {
-   // Do any pipes need removal?
-   $('.coin').filter(function() {
-     return $(this).position().left <= -100;
-   }).remove();
-
-   var topheight = Math.floor(Math.random() * flyArea);
-   var newCoin = $('<div class="coin-wrapper animated" style="top: ' + topheight + 'px;"><div class="coin"></div></div>');
-   $("#flyarea").append(newCoin);
-   coins.push(newCoin);
+  var topheight = Math.floor(Math.random() * flyArea);
+  coins = coins.filter(c => c.dX > -100);
+  coins.push(new Coin(topheight));
 };
 
 var isIncompatible = {
