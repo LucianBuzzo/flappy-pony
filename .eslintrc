@@ -37,7 +37,8 @@
     "$": true,
     "buzz": true,
     "Player": true,
-    "Coin": true
+    "Coin": true,
+    "BigScore": true
   },
 
   "plugins": [

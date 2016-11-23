@@ -2,6 +2,8 @@ var canvas = document.querySelector('canvas');
 var context2d = canvas.getContext('2d');
 var debugmode = false;
 
+var bigScore = new BigScore();
+
 var states = Object.freeze({
    SplashScreen: 0,
    GameScreen: 1,
@@ -15,7 +17,7 @@ var velocity = 0;
 var position = 180;
 var rotation = 0;
 var jump = -4.6;
-var flyArea = $("#flyarea").height();
+var flyArea = 420;
 
 var score = 0;
 var highscore = 0;
@@ -150,6 +152,7 @@ function gameloop() {
   context2d.clearRect(0, 0, canvas.width, canvas.height);
   newPlayer.update(velocity, position);
   newPlayer.render(context2d);
+  bigScore.render(context2d);
 
   coins.forEach(coin => {
     coin.update();
@@ -264,18 +267,8 @@ var playerJump = function playerJump() {
   soundJump.play();
 };
 
-var setBigScore = function setBigScore(erase) {
-  var elemscore = $("#bigscore");
-  elemscore.empty();
-
-  if (erase) {
-    return;
-  }
-
-  var digits = score.toString().split('');
-  for (var i = 0; i < digits.length; i++) {
-    elemscore.append("<img src='assets/font_big_" + digits[i] + ".png' alt='" + digits[i] + "'>");
-  }
+var setBigScore = function setBigScore() {
+  bigScore.update(score);
 };
 
 var setSmallScore = function setSmallScore() {
