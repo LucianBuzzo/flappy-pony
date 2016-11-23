@@ -47,6 +47,15 @@ Coin.prototype.render = function render(ctx) {
   }
 };
 
-Coin.prototype.update = function render() {
+Coin.prototype.update = function update() {
    this.dX -= 2;
+};
+
+Coin.prototype.getBoundingBox = function getBoundingBox() {
+  return {
+    top: this.dY,
+    right: this.dX + this.width,
+    bottom: this.dY + this.height,
+    left: this.dX
+  };
 };
