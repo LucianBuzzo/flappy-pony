@@ -25,7 +25,7 @@ Background.prototype.render = function render(ctx) {
 
   ctx.translate(this.x, ctx.canvas.height - this.height);
   ctx.fillStyle = pattern;
-  ctx.fillRect(0, 0, ctx.canvas.width, this.height);
+  ctx.fillRect(0, 0, ctx.canvas.width + this.width, this.height);
 
   ctx.restore();
 };
