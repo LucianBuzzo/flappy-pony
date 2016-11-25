@@ -160,7 +160,6 @@ function gameloop() {
   // Wipe canvas ready for redraw
   context2d.clearRect(0, 0, canvas.width, canvas.height);
 
-  console.log(currentstate);
   // Check if we're on the splash screen or not;
   if (currentstate === 0) {
     background.update();
