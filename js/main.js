@@ -181,12 +181,14 @@ function gameloop() {
 
   newPlayer.update(velocity, position);
   newPlayer.render(context2d);
-  bigScore.render(context2d);
 
   coins.forEach(coin => {
     coin.update();
     coin.render(context2d);
   });
+
+  bigScore.render(context2d);
+
 
   var origwidth = newPlayer.width;
   var origheight = newPlayer.height;
