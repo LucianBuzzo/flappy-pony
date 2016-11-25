@@ -216,13 +216,12 @@ function gameloop() {
   }
 
   // determine the bounding box of the next pipes inner area
-  var nextcoin = coins[0];
+  var nextcoin = coins.find(c => c.dX > boxleft - 20);
 
   var coinWidth = nextcoin.width;
   var coinHeight = nextcoin.height;
   var coinTop = nextcoin.dY;
   var coinLeft = nextcoin.dX;
-  var coinRight = coinLeft + coinWidth;
 
   if (debugmode) {
     boundingbox = $("#pipebox");
@@ -244,12 +243,6 @@ function gameloop() {
     playerScore();
 
     return;
-  }
-
-  // have we passed the imminent danger?
-  if (boxleft > coinRight) {
-    // yes, remove it
-    coins.splice(0, 1);
   }
 }
 
@@ -443,7 +436,7 @@ var playerScore = function playerScore() {
 
 var updateCoins = function updateCoins() {
   var topheight = Math.floor(Math.random() * (flyArea - 40)) + 20;
-  coins = coins.filter(c => c.dX > -100);
+  coins = coins.filter(c => c.dX > -20);
   coins.push(new Coin(topheight, canvas.width));
 };
 
