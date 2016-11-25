@@ -2,10 +2,14 @@ var canvas = document.querySelector('canvas');
 var context2d = canvas.getContext('2d');
 var debugmode = false;
 
+canvas.width = window.innerWidth;
+
+var bigScore = new BigScore();
+
 var states = Object.freeze({
-   SplashScreen: 0,
-   GameScreen: 1,
-   ScoreScreen: 2
+  SplashScreen: 0,
+  GameScreen: 1,
+  ScoreScreen: 2
 });
 
 var currentstate;
@@ -15,7 +19,7 @@ var velocity = 0;
 var position = 180;
 var rotation = 0;
 var jump = -4.6;
-var flyArea = $("#flyarea").height();
+var flyArea = 420;
 
 var score = 0;
 var highscore = 0;
@@ -118,6 +122,10 @@ var startGame = function startGame() {
   // start up our loops
   // 60 times a second
   var updaterate = 1000.0 / 60.0;
+
+  clearInterval(loopGameloop);
+  clearInterval(loopCoinLoop);
+
   loopGameloop = setInterval(gameloop, updaterate);
   loopCoinLoop = setInterval(updateCoins, 1400);
 
@@ -141,35 +149,54 @@ var intersectRect = function intersectRect(r1, r2) {
 };
 
 var newPlayer = new Player();
-var newCoin = new Coin(120);
+var background = new Background();
 
 function gameloop() {
+  // Check if player has crashed into the ground
+  if (currentstate === 2) {
+    return;
+  }
+
+  // Wipe canvas ready for redraw
+  context2d.clearRect(0, 0, canvas.width, canvas.height);
+
+  console.log(currentstate);
+  // Check if we're on the splash screen or not;
+  if (currentstate === 0) {
+    background.update();
+    background.render(context2d);
+
+    newPlayer.update(0, 180);
+    newPlayer.render(context2d);
+
+    return;
+  }
+
   // update the player speed/position
   velocity += gravity;
   position += velocity;
 
-  context2d.clearRect(0, 0, canvas.width, canvas.height);
+  background.update();
+  background.render(context2d);
+
   newPlayer.update(velocity, position);
   newPlayer.render(context2d);
 
-  newCoin.update();
-  newCoin.render(context2d);
+  coins.forEach(coin => {
+    coin.update();
+    coin.render(context2d);
+  });
 
-  var player = $("#player");
+  bigScore.render(context2d);
 
 
-  // update the player
-  updatePlayer(player);
-
-  // create the bounding box
-  var box = document.getElementById('player').getBoundingClientRect();
-  var origwidth = 34.0;
-  var origheight = 24.0;
+  var origwidth = newPlayer.width;
+  var origheight = newPlayer.height;
 
   var boxwidth = origwidth - Math.sin(Math.abs(rotation) / 90 * 8);
-  var boxheight = (origheight + box.height) / 2;
-  var boxleft = (box.width - boxwidth) / 2 + box.left;
-  var boxtop = (box.height - boxheight) / 2 + box.top;
+  var boxheight = origheight;
+  var boxleft = (newPlayer.width - boxwidth) / 2 + 60;
+  var boxtop = (newPlayer.height - boxheight) / 2 + newPlayer.position;
   var boundingbox;
 
   // if we're in debug mode, draw the bounding box
@@ -182,14 +209,13 @@ function gameloop() {
   }
 
   // did we hit the ground?
-  if (box.bottom >= $("#land").offset().top) {
+  if (newPlayer.position + newPlayer.height >= flyArea) {
     playerDead();
     return;
   }
 
   // have they tried to escape through the ceiling? :o
-  var ceiling = $("#ceiling");
-  if (boxtop <= ceiling.offset().top + ceiling.height()) {
+  if (boxtop <= 0) {
     position = 0;
   }
 
@@ -201,10 +227,10 @@ function gameloop() {
   // determine the bounding box of the next pipes inner area
   var nextcoin = coins[0];
 
-  var coinWidth = nextcoin.width();
-  var coinHeight = nextcoin.height();
-  var coinTop = nextcoin.offset().top;
-  var coinLeft = nextcoin.offset().left;
+  var coinWidth = nextcoin.width;
+  var coinHeight = nextcoin.height;
+  var coinTop = nextcoin.dY;
+  var coinLeft = nextcoin.dX;
   var coinRight = coinLeft + coinWidth;
 
   if (debugmode) {
@@ -215,15 +241,18 @@ function gameloop() {
     boundingbox.css('width', coinWidth);
   }
 
-  var coinBB = nextcoin[0].getBoundingClientRect();
+  var coinBB = nextcoin.getBoundingBox();
+  var playerBB = newPlayer.getBoundingBox();
 
-  if (intersectRect(box, coinBB)) {
+  if (intersectRect(playerBB, coinBB)) {
     console.log('GRABBED A COIN!');
 
-    nextcoin.hide();
+    coins.splice(0, 1);
 
     // and score a point
     playerScore();
+
+    return;
   }
 
   // have we passed the imminent danger?
@@ -268,18 +297,8 @@ var playerJump = function playerJump() {
   soundJump.play();
 };
 
-var setBigScore = function setBigScore(erase) {
-  var elemscore = $("#bigscore");
-  elemscore.empty();
-
-  if (erase) {
-    return;
-  }
-
-  var digits = score.toString().split('');
-  for (var i = 0; i < digits.length; i++) {
-    elemscore.append("<img src='assets/font_big_" + digits[i] + ".png' alt='" + digits[i] + "'>");
-  }
+var setBigScore = function setBigScore() {
+  bigScore.update(score);
 };
 
 var setSmallScore = function setSmallScore() {
@@ -336,20 +355,11 @@ var playerDead = function playerDead() {
   $(".animated").css('animation-play-state', 'paused');
   $(".animated").css('-webkit-animation-play-state', 'paused');
 
-  // drop the bird to the floor
-  // we use width because he'll be rotated 90 deg
-  var playerbottom = $("#player").position().top + $("#player").width();
-  var floor = flyArea;
-  var movey = Math.max(0, floor - playerbottom);
-  $("#player").transition({ y: movey + 'px', rotate: 90}, 1000, 'easeInOutCubic');
-
   // it's time to change states. as of now we're considered ScoreScreen to disable left click/flying
   currentstate = states.ScoreScreen;
 
   // destroy our gameloops
-  clearInterval(loopGameloop);
   clearInterval(loopCoinLoop);
-  loopGameloop = null;
   loopCoinLoop = null;
 
   // mobile browsers don't support buzz bindOnce event
@@ -441,15 +451,9 @@ var playerScore = function playerScore() {
 };
 
 var updateCoins = function updateCoins() {
-   // Do any pipes need removal?
-   $('.coin').filter(function() {
-     return $(this).position().left <= -100;
-   }).remove();
-
-   var topheight = Math.floor(Math.random() * flyArea);
-   var newCoin = $('<div class="coin-wrapper animated" style="top: ' + topheight + 'px;"><div class="coin"></div></div>');
-   $("#flyarea").append(newCoin);
-   coins.push(newCoin);
+  var topheight = Math.floor(Math.random() * (flyArea - 40)) + 20;
+  coins = coins.filter(c => c.dX > -100);
+  coins.push(new Coin(topheight, canvas.width));
 };
 
 var isIncompatible = {
@@ -475,4 +479,7 @@ var isIncompatible = {
     return isIncompatible.Android() || isIncompatible.BlackBerry() || isIncompatible.iOS() || isIncompatible.Opera() || isIncompatible.Safari() || isIncompatible.Windows();
   }
 };
+
+var updaterate = 1000.0 / 60.0;
+loopGameloop = setInterval(gameloop, updaterate);
 

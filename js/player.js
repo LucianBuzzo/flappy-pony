@@ -39,8 +39,8 @@ Player.prototype.render = function render(ctx) {
     this.frames[this.frame].y,
     this.width,
     this.height,
-    0,
-    0,
+    0 - this.width / 2,
+    0 - this.height / 2,
     this.width,
     this.height
   );
@@ -63,4 +63,13 @@ Player.prototype.render = function render(ctx) {
 Player.prototype.update = function render(velocity, position) {
    this.rotation = Math.min(velocity / 10 * 90, 90);
    this.position = position;
+};
+
+Player.prototype.getBoundingBox = function getBoundingBox() {
+  return {
+    top: this.position,
+    right: this.width + 60,
+    bottom: this.position + this.height,
+    left: 60
+  };
 };

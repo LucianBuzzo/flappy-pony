@@ -15,6 +15,11 @@
    limitations under the License.
 */
 
+body {
+  height: 100%;
+  background: linear-gradient(0deg, #ded895 50%, #4ec0ca 50%);
+}
+
 @-webkit-keyframes animLand {
    0% { background-position: 0px 0px; }
    100% { background-position: -335px 0px; }
@@ -366,8 +371,7 @@ Screen - Game
    top: 200px;
 }
 
-.bird
-{
+.bird {
    position: absolute;
    width: 40px;
    height: 37px;
@@ -465,13 +469,12 @@ Screen - Game
   animation: animCoin 750ms steps(1) infinite;
 }
 
-/*
-.game-wrapper,
-#gamecontainer {
-  width: 50%;
-  float: left;
-}
-*/
 .game-wrapper {
-  display: none;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.game-wrapper #land {
+  bottom: -98px;
+  height: 100px;
 }

@@ -1,4 +1,4 @@
-var Coin = function Coin(position) {
+var Coin = function Coin(dY, dX) {
   var image = new Image();
 
   image.src = '/assets/coin-sprites.png';
@@ -15,8 +15,8 @@ var Coin = function Coin(position) {
     { x: 6, y: 198 },
     { x: 6, y: 230 },
   ];
-  this.dY = position;
-  this.dX = 900;
+  this.dY = dY;
+  this.dX = dX;
 };
 
 Coin.prototype.render = function render(ctx) {
@@ -47,6 +47,15 @@ Coin.prototype.render = function render(ctx) {
   }
 };
 
-Coin.prototype.update = function render() {
+Coin.prototype.update = function update() {
    this.dX -= 2;
+};
+
+Coin.prototype.getBoundingBox = function getBoundingBox() {
+  return {
+    top: this.dY,
+    right: this.dX + this.width,
+    bottom: this.dY + this.height,
+    left: this.dX
+  };
 };
