@@ -1,7 +1,7 @@
 var Coin = function Coin(dY, dX) {
   var image = new Image();
 
-  image.src = '/assets/coin-sprites.png';
+  image.src = './assets/coin-sprites.png';
 
   this.loaded = false;
   this.img = image;

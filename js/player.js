@@ -1,7 +1,7 @@
 var Player = function Player() {
   var playerImage = new Image();
 
-  playerImage.src = '/assets/pony-sprites.png';
+  playerImage.src = './assets/pony-sprites.png';
 
   playerImage.onload = function() {
   };

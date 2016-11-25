@@ -1,6 +1,6 @@
 var Background = function Background() {
   var img = new Image();
-  img.src = '/assets/sky.png';
+  img.src = './assets/sky.png';
   this.img = img;
   this.x = 0;
   this.height = 109;
