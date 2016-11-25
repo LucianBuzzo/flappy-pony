@@ -8,7 +8,7 @@ var Background = function Background() {
 };
 
 Background.prototype.update = function update() {
-  this.x -= 2;
+  this.x -= 1;
   if (this.x <= 0 - this.width) {
     this.x = 0;
   }
