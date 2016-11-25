@@ -30,11 +30,11 @@ var replayclickable = false;
 
 //  sounds
 var volume = 30;
-var soundJump = new buzz.sound("assets/sounds/sfx_wing.ogg");
-var soundScore = new buzz.sound("assets/sounds/sfx_point.ogg");
-var soundHit = new buzz.sound("assets/sounds/sfx_hit.ogg");
-var soundDie = new buzz.sound("assets/sounds/sfx_die.ogg");
-var soundSwoosh = new buzz.sound("assets/sounds/sfx_swooshing.ogg");
+var soundJump = new buzz.sound('assets/sounds/sfx_wing.ogg');
+var soundScore = new buzz.sound('assets/sounds/sfx_point.ogg');
+var soundHit = new buzz.sound('assets/sounds/sfx_hit.ogg');
+var soundDie = new buzz.sound('assets/sounds/sfx_die.ogg');
+var soundSwoosh = new buzz.sound('assets/sounds/sfx_swooshing.ogg');
 buzz.all().setVolume(volume);
 
 //  loops
@@ -42,13 +42,13 @@ var loopGameloop;
 var loopCoinLoop;
 
 $(document).ready(function() {
-  if (window.location.search === "?debug") {
+  if (window.location.search === '?debug') {
     debugmode = true;
   }
 
   //  get the highscore
-  var savedscore = getCookie("highscore");
-  if (savedscore !== "") {
+  var savedscore = getCookie('highscore');
+  if (savedscore !== '') {
     highscore = parseInt(savedscore, 10);
   }
 
@@ -57,7 +57,7 @@ $(document).ready(function() {
 });
 
 var getCookie = function getCookie(cname) {
-  var name = cname + "=";
+  var name = cname + '=';
   var ca = document.cookie.split(';');
   for (var i = 0; i < ca.length; i++) {
     var c = ca[i].trim();
@@ -65,14 +65,14 @@ var getCookie = function getCookie(cname) {
       return c.substring(name.length, c.length);
     }
   }
-  return "";
+  return '';
 };
 
 var setCookie = function setCookie(cname, cvalue, exdays) {
   var d = new Date();
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  var expires = "expires=" + d.toGMTString();
-  document.cookie = cname + "=" + cvalue + "; " + expires;
+  var expires = 'expires=' + d.toGMTString();
+  document.cookie = cname + '=' + cvalue + '; ' + expires;
 };
 
 var showSplash = function showSplash() {
@@ -91,19 +91,19 @@ var showSplash = function showSplash() {
   coins = [];
 
   //  make everything animated again
-  $(".animated").css('animation-play-state', 'running');
-  $(".animated").css('-webkit-animation-play-state', 'running');
+  $('.animated').css('animation-play-state', 'running');
+  $('.animated').css('-webkit-animation-play-state', 'running');
 
   //  fade in the splash
-  $("#splash").transition({ opacity: 1 }, 2000, 'ease');
+  $('#splash').transition({ opacity: 1 }, 2000, 'ease');
 };
 
 var startGame = function startGame() {
   currentstate = states.GameScreen;
 
   // fade out the splash
-  $("#splash").stop();
-  $("#splash").transition({ opacity: 0 }, 500, 'ease');
+  $('#splash').stop();
+  $('#splash').transition({ opacity: 0 }, 500, 'ease');
 
   // update the big score
   setBigScore();
@@ -111,7 +111,7 @@ var startGame = function startGame() {
   // debug mode?
   if (debugmode) {
     //  show the bounding boxes
-    $(".boundingbox").show();
+    $('.boundingbox').show();
   }
 
   // start up our loops
@@ -192,7 +192,7 @@ function gameloop() {
 
   // if we're in debug mode, draw the bounding box
   if (debugmode) {
-    boundingbox = $("#playerbox");
+    boundingbox = $('#playerbox');
     boundingbox.css('left', boxleft);
     boundingbox.css('top', boxtop);
     boundingbox.css('height', boxheight);
@@ -224,7 +224,7 @@ function gameloop() {
   var coinLeft = nextcoin.dX;
 
   if (debugmode) {
-    boundingbox = $("#pipebox");
+    boundingbox = $('#pipebox');
     boundingbox.css('left', coinLeft);
     boundingbox.css('top', coinTop);
     boundingbox.css('height', coinHeight);
@@ -250,9 +250,9 @@ function gameloop() {
 $(document).keydown(function(e) {
   // space bar!
   if (e.keyCode === 32) {
-    // in ScoreScreen, hitting space should click the "replay" button. else it's just a regular spacebar hit
+    // in ScoreScreen, hitting space should click the 'replay' button. else it's just a regular spacebar hit
     if (currentstate === states.ScoreScreen) {
-      $("#replay").click();
+      $('#replay').click();
     } else {
       screenClick();
     }
@@ -268,10 +268,10 @@ var screenClick = function screenClick() {
 };
 
 // Handle mouse down OR touch start
-if ("ontouchstart" in window) {
-  $(document).on("touchstart", screenClick);
+if ('ontouchstart' in window) {
+  $(document).on('touchstart', screenClick);
 } else {
-  $(document).on("mousedown", screenClick);
+  $(document).on('mousedown', screenClick);
 }
 
 var playerJump = function playerJump() {
@@ -286,27 +286,27 @@ var setBigScore = function setBigScore() {
 };
 
 var setSmallScore = function setSmallScore() {
-  var elemscore = $("#currentscore");
+  var elemscore = $('#currentscore');
   elemscore.empty();
 
   var digits = score.toString().split('');
   for (var i = 0; i < digits.length; i++) {
-    elemscore.append("<img src='assets/font_small_" + digits[i] + ".png' alt='" + digits[i] + "'>");
+    elemscore.append('<img src="assets/font_small_' + digits[i] + '.png" alt="' + digits[i] + '">');
   }
 };
 
 var setHighScore = function setHighScore() {
-  var elemscore = $("#highscore");
+  var elemscore = $('#highscore');
   elemscore.empty();
 
   var digits = highscore.toString().split('');
   for (var i = 0; i < digits.length; i++) {
-    elemscore.append("<img src='assets/font_small_" + digits[i] + ".png' alt='" + digits[i] + "'>");
+    elemscore.append('<img src="assets/font_small_' + digits[i] + '.png" alt="' + digits[i] + '">');
   }
 };
 
 var setMedal = function setMedal() {
-  var elemmedal = $("#medal");
+  var elemmedal = $('#medal');
   var medal = '';
   elemmedal.empty();
 
@@ -316,16 +316,16 @@ var setMedal = function setMedal() {
   }
 
   if (score >= 10) {
-    medal = "bronze";
+    medal = 'bronze';
   }
   if (score >= 20) {
-    medal = "silver";
+    medal = 'silver';
   }
   if (score >= 30) {
-    medal = "gold";
+    medal = 'gold';
   }
   if (score >= 40) {
-    medal = "platinum";
+    medal = 'platinum';
   }
 
   elemmedal.append('<img src="assets/medal_' + medal + '.png" alt="' + medal + '">');
@@ -336,8 +336,8 @@ var setMedal = function setMedal() {
 
 var playerDead = function playerDead() {
   // stop animating everything!
-  $(".animated").css('animation-play-state', 'paused');
-  $(".animated").css('-webkit-animation-play-state', 'paused');
+  $('.animated').css('animation-play-state', 'paused');
+  $('.animated').css('-webkit-animation-play-state', 'paused');
 
   // it's time to change states. as of now we're considered ScoreScreen to disable left click/flying
   currentstate = states.ScoreScreen;
@@ -352,8 +352,8 @@ var playerDead = function playerDead() {
     showScore();
   } else {
     // play the hit sound (then the dead sound) and then show score
-    soundHit.play().bindOnce("ended", function() {
-      soundDie.play().bindOnce("ended", function() {
+    soundHit.play().bindOnce('ended', function() {
+      soundDie.play().bindOnce('ended', function() {
         showScore();
       });
     });
@@ -362,7 +362,7 @@ var playerDead = function playerDead() {
 
 var showScore = function showScore() {
   // unhide us
-  $("#scoreboard").css("display", "block");
+  $('#scoreboard').css('display', 'block');
 
   // remove the big score
   setBigScore(true);
@@ -372,7 +372,7 @@ var showScore = function showScore() {
     // yeah!
     highscore = score;
     // save it!
-    setCookie("highscore", highscore, 999);
+    setCookie('highscore', highscore, 999);
   }
 
   // update the scoreboard
@@ -386,18 +386,18 @@ var showScore = function showScore() {
 
   // show the scoreboard
   // move it down so we can slide it up
-  $("#scoreboard").css({ y: '40px', opacity: 0 });
-  $("#replay").css({ y: '40px', opacity: 0 });
-  $("#scoreboard").transition({ y: '0px', opacity: 1 }, 600, 'ease', function() {
+  $('#scoreboard').css({ y: '40px', opacity: 0 });
+  $('#replay').css({ y: '40px', opacity: 0 });
+  $('#scoreboard').transition({ y: '0px', opacity: 1 }, 600, 'ease', function() {
     // When the animation is done, animate in the replay button and SWOOSH!
     soundSwoosh.stop();
     soundSwoosh.play();
-    $("#replay").transition({ y: '0px', opacity: 1}, 600, 'ease');
+    $('#replay').transition({ y: '0px', opacity: 1}, 600, 'ease');
 
     // also animate in the MEDAL! WOO!
     if (wonmedal) {
-      $("#medal").css({ scale: 2, opacity: 0 });
-      $("#medal").transition({ opacity: 1, scale: 1 }, 1200, 'ease');
+      $('#medal').css({ scale: 2, opacity: 0 });
+      $('#medal').transition({ opacity: 1, scale: 1 }, 1200, 'ease');
     }
   });
 
@@ -405,7 +405,7 @@ var showScore = function showScore() {
   replayclickable = true;
 };
 
-$("#replay").click(function() {
+$('#replay').click(function() {
   // make sure we can only click once
   if (!replayclickable) {
     return;
@@ -417,9 +417,9 @@ $("#replay").click(function() {
   soundSwoosh.play();
 
   // fade out the scoreboard
-  $("#scoreboard").transition({ y: '-40px', opacity: 0}, 1000, 'ease', function() {
+  $('#scoreboard').transition({ y: '-40px', opacity: 0}, 1000, 'ease', function() {
     // when that's done, display us back to nothing
-    $("#scoreboard").css("display", "none");
+    $('#scoreboard').css('display', 'none');
 
     // start the game over!
     showSplash();
