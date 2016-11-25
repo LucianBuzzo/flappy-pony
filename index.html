@@ -9,40 +9,22 @@
     <link href="css/main.css" rel="stylesheet">
   </head>
   <body>
-    <div class="pony pony-1"></div>
-    <div class="pony pony-2"></div>
-    <div class="pony pony-3"></div>
-    <div class="pony pony-4"></div>
-    <div class="pony pony-5"></div>
-    <div id="gamecontainer">
-      <div id="gamescreen">
-        <div id="sky" class="animated">
-          <div id="flyarea">
-            <div id="ceiling" class="animated"></div>
-            <!-- This is the flying and pipe area container -->
-            <div id="player" class="bird animated"></div>
-
-            <div id="bigscore"></div>
-
-            <div id="splash"></div>
-
-            <div id="scoreboard">
-              <div id="medal"></div>
-              <div id="currentscore"></div>
-              <div id="highscore"></div>
-              <div id="replay"><img src="assets/replay.png" alt="replay"></div>
-            </div>
-
-            <!-- Pipes go here! -->
-          </div>
-        </div>
-        <div id="land" class="animated"><div id="debug"></div></div>
-      </div>
-    </div>
     <div class="game-wrapper" style="position: relative">
+      <div id="ceiling" class="animated"></div>
+      <div id="splash"></div>
       <canvas height="420" width="1280"></canvas>
-      <div class="boundingbox" id="playerbox"></div>
-      <div class="boundingbox" id="pipebox"></div>
+      <div id="land" class="animated"></div>
+      <div id="scoreboard">
+        <div id="medal"></div>
+        <div id="currentscore"></div>
+        <div id="highscore"></div>
+        <div id="replay"><img src="assets/replay.png" alt="replay"></div>
+      </div>
+
+      <div id="debug">
+        <div class="boundingbox" id="playerbox"></div>
+        <div class="boundingbox" id="pipebox"></div>
+      </div>
     </div>
     <div id="footer">
        <a href="http://www.dotgears.com/">original game/concept/art by dong nguyen</a>

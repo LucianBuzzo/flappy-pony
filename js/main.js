@@ -2,6 +2,8 @@ var canvas = document.querySelector('canvas');
 var context2d = canvas.getContext('2d');
 var debugmode = false;
 
+canvas.width = window.innerWidth;
+
 var bigScore = new BigScore();
 
 var states = Object.freeze({
@@ -120,6 +122,10 @@ var startGame = function startGame() {
   // start up our loops
   // 60 times a second
   var updaterate = 1000.0 / 60.0;
+
+  clearInterval(loopGameloop);
+  clearInterval(loopCoinLoop);
+
   loopGameloop = setInterval(gameloop, updaterate);
   loopCoinLoop = setInterval(updateCoins, 1400);
 
@@ -146,8 +152,26 @@ var newPlayer = new Player();
 var background = new Background();
 
 function gameloop() {
+  // Check if player has crashed into the ground
+  if (currentstate === 2) {
+    return;
+  }
+
   // Wipe canvas ready for redraw
   context2d.clearRect(0, 0, canvas.width, canvas.height);
+
+  console.log(currentstate);
+  // Check if we're on the splash screen or not;
+  if (currentstate === 0) {
+    background.update();
+    background.render(context2d);
+
+    newPlayer.update(0, 180);
+    newPlayer.render(context2d);
+
+    return;
+  }
+
   // update the player speed/position
   velocity += gravity;
   position += velocity;
@@ -329,20 +353,11 @@ var playerDead = function playerDead() {
   $(".animated").css('animation-play-state', 'paused');
   $(".animated").css('-webkit-animation-play-state', 'paused');
 
-  // drop the bird to the floor
-  // we use width because he'll be rotated 90 deg
-  var playerbottom = $("#player").position().top + $("#player").width();
-  var floor = flyArea;
-  var movey = Math.max(0, floor - playerbottom);
-  $("#player").transition({ y: movey + 'px', rotate: 90}, 1000, 'easeInOutCubic');
-
   // it's time to change states. as of now we're considered ScoreScreen to disable left click/flying
   currentstate = states.ScoreScreen;
 
   // destroy our gameloops
-  clearInterval(loopGameloop);
   clearInterval(loopCoinLoop);
-  loopGameloop = null;
   loopCoinLoop = null;
 
   // mobile browsers don't support buzz bindOnce event
@@ -462,4 +477,7 @@ var isIncompatible = {
     return isIncompatible.Android() || isIncompatible.BlackBerry() || isIncompatible.iOS() || isIncompatible.Opera() || isIncompatible.Safari() || isIncompatible.Windows();
   }
 };
+
+var updaterate = 1000.0 / 60.0;
+loopGameloop = setInterval(gameloop, updaterate);
 
