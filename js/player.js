@@ -22,7 +22,7 @@ var Player = function Player() {
   ];
 };
 
-Player.prototype.render = function render(ctx) {
+Player.prototype.render = function render(ctx, freeze) {
   // save the unrotated context of the canvas so we can restore it later
   // the alternative is to untranslate & unrotate after drawing
   ctx.save();
@@ -47,6 +47,10 @@ Player.prototype.render = function render(ctx) {
 
   ctx.restore();
 
+  if (freeze) {
+    return;
+  }
+
   this.tickCount++;
 
   if (this.tickCount < 7) {
@@ -60,7 +64,7 @@ Player.prototype.render = function render(ctx) {
   }
 };
 
-Player.prototype.update = function render(velocity, position) {
+Player.prototype.update = function update(velocity, position) {
    this.rotation = Math.min(velocity / 10 * 90, 90);
    this.position = position;
 };

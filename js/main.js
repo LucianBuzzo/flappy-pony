@@ -84,15 +84,10 @@ var showSplash = function showSplash() {
   rotation = 0;
   score = 0;
 
-  //  update the player in preparation for the next game
-  $("#player").css({ y: 0, x: 0});
-  updatePlayer($("#player"));
-
   soundSwoosh.stop();
   soundSwoosh.play();
 
   //  clear out all the coins if there are any
-  $(".coin-wrapper").remove();
   coins = [];
 
   //  make everything animated again
@@ -133,14 +128,6 @@ var startGame = function startGame() {
   playerJump();
 };
 
-var updatePlayer = function updatePlayer(player) {
-   // rotation
-   rotation = Math.min(velocity / 10 * 90, 90);
-
-   // apply rotation and position
-   $(player).css({ rotate: rotation, top: position });
-};
-
 var intersectRect = function intersectRect(r1, r2) {
   return !(r2.left > r1.right ||
            r2.right < r1.left ||
@@ -148,25 +135,30 @@ var intersectRect = function intersectRect(r1, r2) {
            r2.bottom < r1.top);
 };
 
-var newPlayer = new Player();
+var player = new Player();
 var background = new Background();
 
 function gameloop() {
-  // Check if player has crashed into the ground
-  if (currentstate === 2) {
-    return;
-  }
-
   // Wipe canvas ready for redraw
   context2d.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Check if player has crashed into the ground
+  if (currentstate === 2) {
+    background.render(context2d);
+    player.render(context2d, true);
+    coins.forEach(coin => {
+      coin.render(context2d);
+    });
+    return;
+  }
 
   // Check if we're on the splash screen or not;
   if (currentstate === 0) {
     background.update();
     background.render(context2d);
 
-    newPlayer.update(0, 180);
-    newPlayer.render(context2d);
+    player.update(0, 180);
+    player.render(context2d);
 
     return;
   }
@@ -178,8 +170,8 @@ function gameloop() {
   background.update();
   background.render(context2d);
 
-  newPlayer.update(velocity, position);
-  newPlayer.render(context2d);
+  player.update(velocity, position);
+  player.render(context2d);
 
   coins.forEach(coin => {
     coin.update();
@@ -189,13 +181,13 @@ function gameloop() {
   bigScore.render(context2d);
 
 
-  var origwidth = newPlayer.width;
-  var origheight = newPlayer.height;
+  var origwidth = player.width;
+  var origheight = player.height;
 
   var boxwidth = origwidth - Math.sin(Math.abs(rotation) / 90 * 8);
   var boxheight = origheight;
-  var boxleft = (newPlayer.width - boxwidth) / 2 + 60;
-  var boxtop = (newPlayer.height - boxheight) / 2 + newPlayer.position;
+  var boxleft = (player.width - boxwidth) / 2 + 60;
+  var boxtop = (player.height - boxheight) / 2 + player.position;
   var boundingbox;
 
   // if we're in debug mode, draw the bounding box
@@ -208,7 +200,7 @@ function gameloop() {
   }
 
   // did we hit the ground?
-  if (newPlayer.position + newPlayer.height >= flyArea) {
+  if (player.position + player.height >= flyArea) {
     playerDead();
     return;
   }
@@ -241,7 +233,7 @@ function gameloop() {
   }
 
   var coinBB = nextcoin.getBoundingBox();
-  var playerBB = newPlayer.getBoundingBox();
+  var playerBB = player.getBoundingBox();
 
   if (intersectRect(playerBB, coinBB)) {
     console.log('GRABBED A COIN!');
