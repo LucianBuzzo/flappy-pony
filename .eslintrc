@@ -38,6 +38,7 @@
     "buzz": true,
     "Player": true,
     "Coin": true,
+    "Background": true,
     "BigScore": true
   },
 

@@ -366,8 +366,7 @@ Screen - Game
    top: 200px;
 }
 
-.bird
-{
+.bird {
    position: absolute;
    width: 40px;
    height: 37px;
@@ -463,11 +462,6 @@ Screen - Game
 
   -webkit-animation: animCoin 750ms steps(1) infinite;
   animation: animCoin 750ms steps(1) infinite;
-}
-
-canvas {
-  border-top: 4px solid black;
-  border-bottom: 4px solid black;
 }
 
 .game-wrapper,

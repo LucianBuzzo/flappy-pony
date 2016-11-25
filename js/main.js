@@ -5,9 +5,9 @@ var debugmode = false;
 var bigScore = new BigScore();
 
 var states = Object.freeze({
-   SplashScreen: 0,
-   GameScreen: 1,
-   ScoreScreen: 2
+  SplashScreen: 0,
+  GameScreen: 1,
+  ScoreScreen: 2
 });
 
 var currentstate;
@@ -143,13 +143,18 @@ var intersectRect = function intersectRect(r1, r2) {
 };
 
 var newPlayer = new Player();
+var background = new Background();
 
 function gameloop() {
+  // Wipe canvas ready for redraw
+  context2d.clearRect(0, 0, canvas.width, canvas.height);
   // update the player speed/position
   velocity += gravity;
   position += velocity;
 
-  context2d.clearRect(0, 0, canvas.width, canvas.height);
+  background.update();
+  background.render(context2d);
+
   newPlayer.update(velocity, position);
   newPlayer.render(context2d);
   bigScore.render(context2d);
@@ -184,7 +189,6 @@ function gameloop() {
   }
 
   // have they tried to escape through the ceiling? :o
-  var ceiling = $("#ceiling");
   if (boxtop <= 0) {
     position = 0;
   }
@@ -430,7 +434,7 @@ var playerScore = function playerScore() {
 };
 
 var updateCoins = function updateCoins() {
-  var topheight = Math.floor(Math.random() * flyArea - 40) + 20;
+  var topheight = Math.floor(Math.random() * (flyArea - 40)) + 20;
   coins = coins.filter(c => c.dX > -100);
   coins.push(new Coin(topheight));
 };
