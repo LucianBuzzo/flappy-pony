@@ -19,7 +19,7 @@ BigScore.prototype.update = function render(score) {
 
   this.digits.forEach((digit) => {
     var image = new Image();
-    image.src = '/assets/font_big_' + digit + '.png';
+    image.src = './assets/font_big_' + digit + '.png';
     this.numberImages.push(image);
   });
 };
