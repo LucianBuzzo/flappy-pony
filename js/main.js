@@ -90,10 +90,6 @@ var showSplash = function showSplash() {
   //  clear out all the coins if there are any
   coins = [];
 
-  //  make everything animated again
-  $('.animated').css('animation-play-state', 'running');
-  $('.animated').css('-webkit-animation-play-state', 'running');
-
   //  fade in the splash
   $('#splash').transition({ opacity: 1 }, 2000, 'ease');
 };
@@ -336,10 +332,6 @@ var setMedal = function setMedal() {
 };
 
 var playerDead = function playerDead() {
-  // stop animating everything!
-  $('.animated').css('animation-play-state', 'paused');
-  $('.animated').css('-webkit-animation-play-state', 'paused');
-
   // it's time to change states. as of now we're considered ScoreScreen to disable left click/flying
   currentstate = states.ScoreScreen;
 
