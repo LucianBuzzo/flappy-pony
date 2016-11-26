@@ -15,11 +15,11 @@ var Background = function Background() {
   this.width = 960;
 };
 
-Background.prototype.update = function update() {
+Background.prototype.update = function update(speed) {
   var len = this.images.length;
   var width = this.width;
   this.images = this.images.map(function(item, index) {
-    item.x -= 1 / len * (index + 1);
+    item.x -= speed / len * (index + 1);
     if (item.x <= 0 - width) {
       item.x = 0;
     }

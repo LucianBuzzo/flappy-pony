@@ -139,6 +139,7 @@ var player = new Player();
 var background = new Background();
 
 function gameloop() {
+  var speed = 2;
   // Wipe canvas ready for redraw
   context2d.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -154,7 +155,7 @@ function gameloop() {
 
   // Check if we're on the splash screen or not;
   if (currentstate === 0) {
-    background.update();
+    background.update(speed);
     background.render(context2d);
 
     player.update(0, 180);
@@ -167,14 +168,14 @@ function gameloop() {
   velocity += gravity;
   position += velocity;
 
-  background.update();
+  background.update(speed);
   background.render(context2d);
 
   player.update(velocity, position);
   player.render(context2d);
 
   coins.forEach(coin => {
-    coin.update();
+    coin.update(speed);
     coin.render(context2d);
   });
 
