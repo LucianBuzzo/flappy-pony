@@ -5,6 +5,8 @@ var debugmode = false;
 canvas.width = window.innerWidth;
 
 var bigScore = new BigScore();
+var player = new Player();
+var background = new Background();
 
 var states = Object.freeze({
   SplashScreen: 0,
@@ -131,9 +133,6 @@ var intersectRect = function intersectRect(r1, r2) {
            r2.bottom < r1.top);
 };
 
-var player = new Player();
-var background = new Background();
-
 function gameloop() {
   var speed = 2;
   // Wipe canvas ready for redraw
@@ -177,23 +176,17 @@ function gameloop() {
 
   bigScore.render(context2d);
 
-
-  var origwidth = player.width;
-  var origheight = player.height;
-
-  var boxwidth = origwidth - Math.sin(Math.abs(rotation) / 90 * 8);
-  var boxheight = origheight;
-  var boxleft = (player.width - boxwidth) / 2 + 60;
-  var boxtop = (player.height - boxheight) / 2 + player.position;
-  var boundingbox;
+  var playerBB = player.getBoundingBox();
 
   // if we're in debug mode, draw the bounding box
   if (debugmode) {
-    boundingbox = $('#playerbox');
-    boundingbox.css('left', boxleft);
-    boundingbox.css('top', boxtop);
-    boundingbox.css('height', boxheight);
-    boundingbox.css('width', boxwidth);
+    context2d.strokeStyle = 'red';
+    context2d.strokeRect(
+      playerBB.left, 
+      playerBB.top, 
+      playerBB.right - playerBB.left, 
+      playerBB.bottom - playerBB.top
+    );
   }
 
   // did we hit the ground?
@@ -203,7 +196,7 @@ function gameloop() {
   }
 
   // have they tried to escape through the ceiling? :o
-  if (boxtop <= 20) {
+  if (playerBB.top <= 20) {
     position = 20;
   }
 
@@ -213,23 +206,20 @@ function gameloop() {
   }
 
   // determine the bounding box of the next pipes inner area
-  var nextcoin = coins.find(c => c.dX > boxleft - 20);
-
-  var coinWidth = nextcoin.width;
-  var coinHeight = nextcoin.height;
-  var coinTop = nextcoin.dY;
-  var coinLeft = nextcoin.dX;
-
-  if (debugmode) {
-    boundingbox = $('#pipebox');
-    boundingbox.css('left', coinLeft);
-    boundingbox.css('top', coinTop);
-    boundingbox.css('height', coinHeight);
-    boundingbox.css('width', coinWidth);
-  }
+  var nextcoin = coins.find(c => c.dX > playerBB.left - 20);
 
   var coinBB = nextcoin.getBoundingBox();
-  var playerBB = player.getBoundingBox();
+
+  if (debugmode) {
+    context2d.strokeStyle = 'red';
+    context2d.strokeRect(
+      coinBB.left, 
+      coinBB.top, 
+      coinBB.right - coinBB.left, 
+      coinBB.bottom - coinBB.top
+    );
+  }
+
 
   if (intersectRect(playerBB, coinBB)) {
     console.log('GRABBED A COIN!');
