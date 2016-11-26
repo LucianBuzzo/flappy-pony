@@ -4,8 +4,10 @@ var debugmode = false;
 
 canvas.width = window.innerWidth;
 
+var pony = window.location.search === '?DD' ? 'DD' : 'RD';
+
 var bigScore = new BigScore();
-var player = new Player();
+var player = new Player(pony);
 var background = new Background();
 
 var states = Object.freeze({

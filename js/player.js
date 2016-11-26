@@ -1,4 +1,7 @@
-var Player = function Player() {
+var Player = function Player(pony) {
+  if (!pony) {
+    pony = 'RD';
+  }
   var playerImage = new Image();
 
   playerImage.src = './assets/pony-sprites.png';
@@ -6,20 +9,30 @@ var Player = function Player() {
   playerImage.onload = function() {
   };
 
-  this.loaded = false;
-  this.img = playerImage;
-  this.width = 44;
-  this.height = 37;
-  this.frame = 0;
-  this.tickCount = 0;
-  this.position = 180;
-  this.frames = [
+  var RDframes = [
     { x: 194, y: 152 },
     { x: 242, y: 152 },
     { x: 287, y: 152 },
     { x: 335, y: 152 },
     { x: 385, y: 152 },
   ];
+
+  var DDframes = [
+    { x: 530, y: 293 },
+    { x: 578, y: 293 },
+    { x: 623, y: 293 },
+    { x: 671, y: 293 },
+    { x: 721, y: 293 },
+  ];
+
+  this.loaded = false;
+  this.img = playerImage;
+  this.width = 44;
+  this.height = pony === 'RD' ? 37 : 45;
+  this.frame = 0;
+  this.tickCount = 0;
+  this.position = 180;
+  this.frames = pony === 'RD' ? RDframes : DDframes;
 };
 
 Player.prototype.render = function render(ctx, freeze) {
