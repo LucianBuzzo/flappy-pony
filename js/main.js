@@ -19,7 +19,7 @@ var velocity = 0;
 var position = 180;
 var rotation = 0;
 var jump = -4.6;
-var flyArea = 420;
+var flyArea = 480;
 
 var score = 0;
 var highscore = 0;
@@ -206,8 +206,8 @@ function gameloop() {
   }
 
   // have they tried to escape through the ceiling? :o
-  if (boxtop <= 0) {
-    position = 0;
+  if (boxtop <= 20) {
+    position = 20;
   }
 
   // we can't go any further without a pipe
@@ -435,7 +435,7 @@ var playerScore = function playerScore() {
 };
 
 var updateCoins = function updateCoins() {
-  var topheight = Math.floor(Math.random() * (flyArea - 40)) + 20;
+  var topheight = Math.floor(Math.random() * (flyArea - 80)) + 20;
   coins = coins.filter(c => c.dX > -20);
   coins.push(new Coin(topheight, canvas.width));
 };
