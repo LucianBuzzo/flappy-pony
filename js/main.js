@@ -8,7 +8,7 @@ var pony = window.location.search === '?DD' ? 'DD' : 'RD';
 
 var bigScore = new BigScore();
 var player = new Player(pony);
-var background = new Background();
+var background = new Background(context2d);
 
 var states = Object.freeze({
   SplashScreen: 0,
@@ -184,9 +184,9 @@ function gameloop() {
   if (debugmode) {
     context2d.strokeStyle = 'red';
     context2d.strokeRect(
-      playerBB.left, 
-      playerBB.top, 
-      playerBB.right - playerBB.left, 
+      playerBB.left,
+      playerBB.top,
+      playerBB.right - playerBB.left,
       playerBB.bottom - playerBB.top
     );
   }
@@ -215,9 +215,9 @@ function gameloop() {
   if (debugmode) {
     context2d.strokeStyle = 'red';
     context2d.strokeRect(
-      coinBB.left, 
-      coinBB.top, 
-      coinBB.right - coinBB.left, 
+      coinBB.left,
+      coinBB.top,
+      coinBB.right - coinBB.left,
       coinBB.bottom - coinBB.top
     );
   }

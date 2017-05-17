@@ -1,15 +1,31 @@
-var Background = function Background() {
+var loadImage = function(img) {
+  return new Promise(function(resolve) {
+    img.onload = function() {
+      return resolve(img);
+    };
+  });
+};
+
+var Background = function Background(ctx) {
   var img1 = new Image();
   var img2 = new Image();
   var img3 = new Image();
   img1.src = './assets/background/background.png';
   img2.src = './assets/background/treeline.png';
   img3.src = './assets/background/foreground.png';
-  this.images = [
-    { x: 0, src: img1 },
-    { x: 0, src: img2 },
-    { x: 0, src: img3 }
-  ];
+  var _this = this;
+  this.images = [];
+  Promise.map([img1, img2, img3], loadImage)
+  .then(function(images) {
+    _this.images = images.map(function(img) {
+      return {
+        pattern: ctx.createPattern(img, 'repeat-x'),
+        src: img,
+        x: 0,
+      };
+    });
+  });
+
   this.x = 0;
   this.height = 600;
   this.width = 960;
@@ -36,12 +52,10 @@ Background.prototype.render = function render(ctx) {
 
   var _this = this;
   this.images.forEach(function(item) {
-    var pattern = ctx.createPattern(item.src, 'repeat-x');
-
     ctx.save();
 
     ctx.translate(item.x, 0);
-    ctx.fillStyle = pattern;
+    ctx.fillStyle = item.pattern;
     ctx.fillRect(0, 0, ctx.canvas.width + _this.width, _this.height);
 
     ctx.restore();
