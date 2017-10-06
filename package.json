@@ -1,0 +1,19 @@
+{
+  "name": "flappy-pony",
+  "version": "1.0.0",
+  "description": "A simple game I made for my daughter who is a big MLP fan!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucianBuzzo/flappy-pony.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucianBuzzo/flappy-pony/issues"
+  },
+  "homepage": "https://github.com/LucianBuzzo/flappy-pony#readme"
+}
