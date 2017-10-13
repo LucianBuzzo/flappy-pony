@@ -8,4 +8,3 @@ Live App
 Check out a live preview of it over here: 
 https://lucianbuzzo.github.io/flappy-pony/
 
-
