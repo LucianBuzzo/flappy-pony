@@ -1,6 +1,6 @@
 {
   "name": "flappy-pony",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple game I made for my daughter who is a big MLP fan!",
   "main": "index.js",
   "scripts": {

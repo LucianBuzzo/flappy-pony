@@ -5,6 +5,5 @@ It's based on nebez's [html5 flappy bird implementation](http://nebez.github.io/
 
 Live App
 ------------
-Check out a live preview of it over here: 
-https://lucianbuzzo.github.io/flappy-pony/
+You can play the game at https://lucianbuzzo.github.io/flappy-pony/
 
