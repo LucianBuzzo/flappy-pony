@@ -207,8 +207,13 @@ function gameloop() {
     return;
   }
 
-  // determine the bounding box of the next pipes inner area
+  // determine the bounding box of the next coin area
   var nextcoin = coins.find(c => c.dX > playerBB.left - 20);
+
+  // all coins may already be behind the player between spawn ticks
+  if (!nextcoin) {
+    return;
+  }
 
   var coinBB = nextcoin.getBoundingBox();
 
